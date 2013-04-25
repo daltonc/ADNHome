@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alwaysDrawnWithCache="true"
-        android:columnWidth="78dp"
+        android:columnWidth="84dp"
         android:numColumns="auto_fit"
         android:persistentDrawingCache="animation|scrolling"
         android:scrollbars="none"
