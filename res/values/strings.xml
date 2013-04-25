@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ADN Home</string>
+    
+    <string name="compose_post_field_hint">Post to App.net</string>
+    <string name="default_application_name">Application</string>
+
+</resources>
