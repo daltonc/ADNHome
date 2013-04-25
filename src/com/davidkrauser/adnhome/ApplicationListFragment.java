@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -39,14 +40,14 @@ public class ApplicationListFragment extends Fragment {
 		List<ApplicationInfo> packages = pm
 				.getInstalledApplications(PackageManager.GET_META_DATA);
 		ArrayList<ApplicationData> applications = new ArrayList<ApplicationData>();
-		
-		for(ApplicationInfo info : packages) {
-			if (info.enabled)
-			{
-			ApplicationData application = new ApplicationData();
-			application.mIcon = pm.getApplicationIcon(info);
-			application.mName = pm.getApplicationLabel(info).toString();
-			applications.add(application);
+
+		for (ApplicationInfo info : packages) {
+			if (info.enabled) {
+				ApplicationData application = new ApplicationData();
+				application.mIcon = pm.getApplicationIcon(info);
+				application.mName = pm.getApplicationLabel(info).toString();
+				application.mIntent = pm.getLaunchIntentForPackage(info.packageName);
+				applications.add(application);
 			}
 		}
 
@@ -55,10 +56,11 @@ public class ApplicationListFragment extends Fragment {
 
 		return view;
 	}
-	
+
 	private class ApplicationData {
 		public Drawable mIcon;
 		public String mName;
+		public Intent mIntent;
 	}
 
 	private class ApplicationListAdapter extends ArrayAdapter<ApplicationData> {
@@ -78,12 +80,19 @@ public class ApplicationListFragment extends Fragment {
 				view = inflater.inflate(R.layout.application, parent, false);
 			}
 
-			ApplicationData application = getItem(position);
+			final ApplicationData application = getItem(position);
 
 			if (application != null) {
 				ImageView iv = (ImageView) view
 						.findViewById(R.id.application_icon);
 				iv.setImageDrawable(application.mIcon);
+				iv.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						startActivity(application.mIntent);
+					}
+				});
 
 				TextView tv = (TextView) view
 						.findViewById(R.id.application_label);
