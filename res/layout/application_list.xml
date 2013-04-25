@@ -6,8 +6,10 @@
         android:alwaysDrawnWithCache="true"
         android:columnWidth="84dp"
         android:numColumns="auto_fit"
+        android:paddingTop="8dp"
         android:persistentDrawingCache="animation|scrolling"
         android:scrollbars="none"
         android:stackFromBottom="false"
         android:stretchMode="spacingWidthUniform"
-        android:textColor="#FFFFFFFF" />
+        android:textColor="#FFFFFFFF"
+        android:overScrollMode="never" />

@@ -6,11 +6,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 public class Launcher extends FragmentActivity {
 
@@ -29,24 +24,7 @@ public class Launcher extends FragmentActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.launcher_pager);
         mViewPager.setAdapter(mLauncherPagerAdapter);
-        mViewPager.setCurrentItem(1);
-
-        EditText composeStatusField = (EditText) findViewById(R.id.compose_post_field);
-        
-        composeStatusField.setOnEditorActionListener(new OnEditorActionListener() {
-        	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        		boolean result = false;
-        		
-        		if (actionId == EditorInfo.IME_ACTION_SEND)
-        		{
-        			Launcher.sADNModel.dispatchPost(v.getText().toString(), (EditText) v);
-        			result = true;
-        		}
-        		
-        		return result;
-        	}
-        });
-        
+        mViewPager.setCurrentItem(1);        
     }
     
     private class LauncherPagerAdapter extends FragmentPagerAdapter {
