@@ -1,14 +1,17 @@
 package com.davidkrauser.adnhome;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -36,19 +39,22 @@ public class ApplicationListFragment extends Fragment {
 
 		final PackageManager pm = inflater.getContext().getPackageManager();
 
-		// get a list of installed apps.
-		List<ApplicationInfo> packages = pm
-				.getInstalledApplications(PackageManager.GET_META_DATA);
+		Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+		final List<ResolveInfo> packages = pm.queryIntentActivities(mainIntent,
+				0);
+		Collections.sort(packages, new ResolveInfo.DisplayNameComparator(pm));
+
 		ArrayList<ApplicationData> applications = new ArrayList<ApplicationData>();
 
-		for (ApplicationInfo info : packages) {
-			if (info.enabled) {
-				ApplicationData application = new ApplicationData();
-				application.mIcon = pm.getApplicationIcon(info);
-				application.mName = pm.getApplicationLabel(info).toString();
-				application.mIntent = pm.getLaunchIntentForPackage(info.packageName);
-				applications.add(application);
-			}
+		for (ResolveInfo info : packages) {
+			ApplicationData application = new ApplicationData();
+			application.mIcon = info.loadIcon(pm);
+			application.mName = info.loadLabel(pm).toString();
+			application.mIntent = pm
+					.getLaunchIntentForPackage(info.activityInfo.packageName);
+			applications.add(application);
 		}
 
 		view.setAdapter(new ApplicationListAdapter(inflater.getContext(),
@@ -86,17 +92,18 @@ public class ApplicationListFragment extends Fragment {
 				ImageView iv = (ImageView) view
 						.findViewById(R.id.application_icon);
 				iv.setImageDrawable(application.mIcon);
-				iv.setOnClickListener(new View.OnClickListener() {
-					
+
+				TextView tv = (TextView) view
+						.findViewById(R.id.application_label);
+				tv.setText(application.mName);
+
+				view.setOnClickListener(new View.OnClickListener() {
+
 					@Override
 					public void onClick(View v) {
 						startActivity(application.mIntent);
 					}
 				});
-
-				TextView tv = (TextView) view
-						.findViewById(R.id.application_label);
-				tv.setText(application.mName);
 			}
 
 			return view;
