@@ -18,6 +18,7 @@
         <activity
             android:name="com.davidkrauser.adnhome.Launcher"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden"
             android:stateNotNeeded="true" >

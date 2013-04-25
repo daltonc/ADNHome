@@ -62,10 +62,13 @@ public class Launcher extends FragmentActivity {
         	switch(position)
         	{
         	case 0:
-        		fragment = new ApplicationListFragment();
+        		fragment = new StreamFragment();
         		break;
         	case 1:
-        		fragment = new StreamFragment();
+        		fragment = new ApplicationListFragment();
+        		break;
+        	case 2:
+        		fragment = new MessagesFragment();
         		break;
         	default:
         		break;
@@ -77,7 +80,7 @@ public class Launcher extends FragmentActivity {
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 2;
+            return 3;
         }
     }
 }
