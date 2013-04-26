@@ -78,7 +78,7 @@ public class ApplicationListFragment extends Fragment {
 			final ApplicationData application = getItem(position);
 
 			if (application != null) {
-				ImageView iv = (ImageView) view
+				final ImageView iv = (ImageView) view
 						.findViewById(R.id.application_icon);
 				iv.setImageDrawable(application.mIcon);
 
@@ -87,9 +87,9 @@ public class ApplicationListFragment extends Fragment {
 				tv.setText(application.mName);
 
 				view.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
+						iv.setAlpha(0.5f);
 						startActivity(application.mIntent);
 					}
 				});
