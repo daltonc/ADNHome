@@ -21,35 +21,52 @@ import android.widget.TextView;
 
 public class ApplicationListFragment extends Fragment {
 
+	// TODO: this is a mess and probably unsafe. Shouldn't need all of these globals. 
+	ApplicationListAdapter mAdapter;
+	PackageManager mPackageManager;
+	Context mContext;
+	GridView mView;
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		GridView view = (GridView) inflater.inflate(R.layout.application_list,
+		mView = (GridView) inflater.inflate(R.layout.application_list,
 				container, false);
+		mContext = inflater.getContext();
+		mPackageManager = inflater.getContext().getPackageManager();
 
-		final PackageManager pm = inflater.getContext().getPackageManager();
+		buildApplicationListAdapter();
 
+		return mView;
+	}
+	
+	@Override
+	public void onResume()
+	{
+		buildApplicationListAdapter();
+		super.onResume();
+	}
+	
+	private void buildApplicationListAdapter()
+	{
 		Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
-		final List<ResolveInfo> packages = pm.queryIntentActivities(mainIntent,
+		final List<ResolveInfo> packages = mPackageManager.queryIntentActivities(mainIntent,
 				0);
-		Collections.sort(packages, new ResolveInfo.DisplayNameComparator(pm));
+		Collections.sort(packages, new ResolveInfo.DisplayNameComparator(mPackageManager));
 
 		ArrayList<ApplicationData> applications = new ArrayList<ApplicationData>();
 
 		for (ResolveInfo info : packages) {
 			ApplicationData application = new ApplicationData();
-			application.mIcon = info.loadIcon(pm);
-			application.mName = info.loadLabel(pm).toString();
-			application.mIntent = pm
+			application.mIcon = info.loadIcon(mPackageManager);
+			application.mName = info.loadLabel(mPackageManager).toString();
+			application.mIntent = mPackageManager
 					.getLaunchIntentForPackage(info.activityInfo.packageName);
 			applications.add(application);
 		}
 
-		view.setAdapter(new ApplicationListAdapter(inflater.getContext(),
-				applications));
-
-		return view;
+		mView.setAdapter(new ApplicationListAdapter(mContext,applications));
 	}
 
 	private class ApplicationData {
@@ -67,13 +84,9 @@ public class ApplicationListFragment extends Fragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = convertView;
-
-			if (convertView == null) {
-				final LayoutInflater inflater = LayoutInflater
-						.from(getContext());
-				view = inflater.inflate(R.layout.application, parent, false);
-			}
+			
+			LayoutInflater inflater = LayoutInflater.from(getContext());
+			View view = (convertView != null)? convertView : inflater.inflate(R.layout.application, parent, false);
 
 			final ApplicationData application = getItem(position);
 
@@ -81,6 +94,7 @@ public class ApplicationListFragment extends Fragment {
 				final ImageView iv = (ImageView) view
 						.findViewById(R.id.application_icon);
 				iv.setImageDrawable(application.mIcon);
+				iv.setAlpha(1.0f);
 
 				TextView tv = (TextView) view
 						.findViewById(R.id.application_label);
@@ -97,6 +111,6 @@ public class ApplicationListFragment extends Fragment {
 
 			return view;
 		}
-
+		
 	}
 }

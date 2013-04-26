@@ -25,12 +25,13 @@ public class StreamFragment extends Fragment {
 			Bundle savedInstanceState) {
 		mWebView = (WebView) inflater.inflate(R.layout.stream, container, false);
 		mWebView.getSettings().setJavaScriptEnabled(true);
-		mWebView.loadUrl("http://alpha.app.net");
+		mWebView.loadUrl("http://app.noodletalk.org");
 		
 		mWebView.setWebViewClient(new WebViewClient() {
 		    @Override
 		    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		        if (Uri.parse(url).getHost().contains("app.net")) {
+		        if (Uri.parse(url).getHost().contains("app.net") ||
+		        		Uri.parse(url).getHost().contains("noodle")) {
 		            return false;
 		        }
 
